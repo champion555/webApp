@@ -1,18 +1,12 @@
 {
   "scripts": {
-    "start": "npm install && node server.js"
+    "start": "nodemon server.js"
   },
-  "keywords": [
-    "heroku"
-  ],
   "author": "justadudewhohacks",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.20.0",
     "express": "^4.17.1",
-    "face-api.js": "^0.22.2",
     "request": "^2.88.2"
-  },
-  "engines": {
-    "node": "10.x"
   }
 }
