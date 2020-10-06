@@ -43,113 +43,73 @@
 
     </div>
     <script>
-    // let forwardTimes = []
-    // function updateTimeStats(timeInMs) {
-    //   forwardTimes = [timeInMs].concat(forwardTimes).slice(0, 30)
-    //   const avgTimeInMs = forwardTimes.reduce((total, t) => total + t) / forwardTimes.length
-    //   $('#time').val(`${Math.round(avgTimeInMs)} ms`)
-    //   $('#fps').val(`${faceapi.utils.round(1000 / avgTimeInMs)}`)
-    // }
-    let screenWidth = window.innerWidth
-    let screenHeight = window.innerHeight
+      let screenWidth = window.innerWidth
+      let screenHeight = window.innerHeight
 
-    function onCapture() {
-      var canvas = document.getElementById("overlay");
-      var video = document.getElementById("inputVideo");
-      canvas.getContext('2d').drawImage(video, 0, 0);
-      console.log("clicked:", canvas.toDataURL())
-      var img = document.getElementById('img_test');
-      img.src = canvas.toDataURL();
-    }
-
-//     function makePostRequest(path, queryObj) { 
-//     axios.post(path, queryObj).then( 
-//         (response) => { 
-//             var result = response.data; 
-//             console.log(result); 
-//         }, 
-//         (error) => { 
-//             console.log(error); 
-//         } 
-//     );
-// }   
-// var formData = new FormData();
-// formData.append("username", "Groucho");
-// formData.append("userfile", fileInputElement.files[0]);
-// makePostRequest('http://127.0.0.1:3000/test', formData); 
-
-    async function onPlay() {
-      const videoEl = $('#inputVideo').get(0)
-      if(videoEl.paused || videoEl.ended || !isFaceDetectionModelLoaded())
-        return setTimeout(() => onPlay())
-      const options = getFaceDetectorOptions()
-      const ts = Date.now()
-      const result = await faceapi.detectSingleFace(videoEl, options)
-      // updateTimeStats(Date.now() - ts)
-      if (result) {
-        // console.log("result:", result._box)
-        // console.log("X=:", result._box._x)
-        // console.log("Y=:", result._box._y)
-        // console.log("Width=:", result._box.width)
-        // console.log("Height=:", result._box.height)
-        let oval_top = screenHeight*0.02
-        let oval_down = screenHeight -screenHeight*0.26
-        let space_top = result._box._y - oval_top
-        let space_down = oval_down - (result._box._y + result._box.width)
-        document.getElementById("txtTopSpace").innerText = space_top
-        document.getElementById("txtDownSpace").innerText = space_down
-        // console.log("space_top", space_top)
-        // console.log("oval_down", screenHeight -screenHeight*0.26)
-        // console.log("face_down", result._box._y + result._box.width)
-        // console.log("space_top:", space_top)
-        // console.log("space_down:", space_down)
-        // (space_top > screenHeight * 0.5 || space_down > screenHeight * 0.1)
-        if (screenHeight * 0.04 < space_top && space_top < screenHeight * 0.08 && screenHeight * 0.32 < space_down &&  space_down< screenHeight * 0.38){
-          // document.getElementById("imgOval").src = "assets/ic_detected.png"
-          document.getElementById("imgOval").setAttribute("src", "assets/ic_detected.png");
-          console.log("detected")
-        }else{
-          document.getElementById("imgOval").setAttribute("src", "assets/ic_undetected.png");
-          console.log("undetected")
-        }    
-        const canvas = $('#overlay').get(0)
-        const dims = faceapi.matchDimensions(canvas, videoEl, true)
-        faceapi.draw.drawDetections(canvas, faceapi.resizeResults(result, dims))
-      }else{
-        // document.getElementById("imgOval").src = "assets/ic_undetected.png"
-        console.log("result no")
+      function onCapture() {
+        var canvas = document.getElementById("overlay");
+        var video = document.getElementById("inputVideo");
+        canvas.getContext('2d').drawImage(video, 0, 0);
+        console.log("clicked:", canvas.toDataURL())
+        var img = document.getElementById('img_test');
+        img.src = canvas.toDataURL();
       }
-      setTimeout(() => onPlay())
-    }
-    async function run() {
-      // load face detection model
-      await changeFaceDetector(TINY_FACE_DETECTOR)
-      changeInputSize(128)
-      const stream = await navigator.mediaDevices.getUserMedia({ video: {} })
-      const videoEl = $('#inputVideo').get(0)
-      videoEl.srcObject = stream
-    }
-    function updateResults() {}
-    $(document).ready(function() {   
-      // ovalview height setting   
-      var img_height = window.innerHeight;
-      var x = document.getElementById("imgOval")
-      x.height = img_height;
+      async function onPlay() {
+        const videoEl = $('#inputVideo').get(0)
+        if(videoEl.paused || videoEl.ended || !isFaceDetectionModelLoaded())
+          return setTimeout(() => onPlay())
+        const options = getFaceDetectorOptions()
+        const ts = Date.now()
+        const result = await faceapi.detectSingleFace(videoEl, options)
+        // updateTimeStats(Date.now() - ts)
+        if (result) {
+          // console.log("result:", result._box)
+          // console.log("X=:", result._box._x)
+          // console.log("Y=:", result._box._y)
+          // console.log("Width=:", result._box.width)
+          // console.log("Height=:", result._box.height)
+          let oval_top = screenHeight*0.02
+          let oval_down = screenHeight -screenHeight*0.26
+          let space_top = result._box._y - oval_top
+          let space_down = oval_down - (result._box._y + result._box.width)
+          document.getElementById("txtTopSpace").innerText = space_top
+          document.getElementById("txtDownSpace").innerText = space_down
+          if (screenHeight * 0.04 < space_top && space_top < screenHeight * 0.08 && screenHeight * 0.32 < space_down &&  space_down< screenHeight * 0.38){
+            // document.getElementById("imgOval").src = "assets/ic_detected.png"
+            document.getElementById("imgOval").setAttribute("src", "assets/ic_detected.png");
+            console.log("detected")
+          }else{
+            document.getElementById("imgOval").setAttribute("src", "assets/ic_undetected.png");
+            console.log("undetected")
+          }    
+          const canvas = $('#overlay').get(0)
+          const dims = faceapi.matchDimensions(canvas, videoEl, true)
+          faceapi.draw.drawDetections(canvas, faceapi.resizeResults(result, dims))
+        }else{
+          // document.getElementById("imgOval").src = "assets/ic_undetected.png"
+          console.log("result no")
+        }
+        setTimeout(() => onPlay())
+      }
+      async function run() {
+        // load face detection model
+        await changeFaceDetector(TINY_FACE_DETECTOR)
+        changeInputSize(128)
+        const stream = await navigator.mediaDevices.getUserMedia({ video: {} })
+        const videoEl = $('#inputVideo').get(0)
+        videoEl.srcObject = stream
+      }
+      function updateResults() {}
+      $(document).ready(function() {   
+        // ovalview height setting   
+        var img_height = window.innerHeight;
+        var x = document.getElementById("imgOval")
+        x.height = img_height;
 
-      // let screenWidth = window.innerWidth
-      // let screenHeight = window.innerHeight
-      alert("sizeHeight:" + screenHeight +"sizeWidth"+ screenWidth)
-      // const canvas2 = document.getElementById('react')
-      // canvas2.width = window.innerWidth
-      // canvas2.height = window.innerHeight
-      // var ctx = canvas2.getContext("2d");
-      // ctx.beginPath();
-      // ctx.lineWidth = "6";
-      // ctx.strokeStyle = "red";
-      // ctx.rect(screenWidth*0.05, screenHeight*0.02, screenWidth - 2*(screenWidth*0.05), screenHeight -screenHeight*0.26);
-      // ctx.stroke();
-      initFaceDetectionControls()
-      run()
-    })
+        alert("sizeHeight:" + screenHeight +"sizeWidth"+ screenWidth)
+
+        initFaceDetectionControls()
+        run()
+      })
   </script>
 </html>
