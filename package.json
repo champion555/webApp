@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "author": "justadudewhohacks",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.20.0",
+    "express": "^4.17.1",
+    "request": "^2.88.2"
+  }
+}
