@@ -17,22 +17,14 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    
-    <!-- <script  type="module">
-     import https from 'https';
-    </script> -->
-    
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>    
   </head>
   <body>
-    <!-- <div class="progress" id="loader">
-      <div class="indeterminate"></div>
-    </div> -->
     <div style="width: 100%;">
       <div style="background-color: #7f00ff;position: absolute;top:0px;left:
         0px;width: 100%;height: 130px;align-items: center;
         display: flex; justify-content: center;">
-        <h1 style="text-align: center; color: white;">Face Liveness</h1>
+        <h1 style="text-align: center; color: white;font-size:  60px;">Face Liveness</h1>
       </div>
         <div class="video-container-define" style="position: absolute;top:130px;left: 0px;z-index: 1;">
           <video class="camera" onloadedmetadata="onPlay(this)" id="inputVideo"
@@ -49,7 +41,7 @@
         <p id="txtMessage"> </p>
       </div>
       <div style="position: absolute; display: none; justify-content: center; align-items: center; z-index: 400; width: 100%; height: 100vh;" id="loadingView">
-        <div class="spinner-border text-primary" style="width: 100px; height: 100px;align-items: center;"></div>
+        <div class="spinner-border text-primary" style="width: 200px; height: 200px;align-items: center;"></div>
       </div>      
       <div style="position: absolute;top:130px;left: 0px;z-index: 4;"  style="width: 100%;align-items: center;">
         <p style="color: white; ;font-size: 40px; text-align: center;" id = "authenticationRes"></p><br/><br/><br/>
@@ -178,28 +170,28 @@
         initFaceDetectionControls()
         // authenticationToServer()
 
-        // var formData = new FormData();
-        // formData.append("api_key", "Mzc0MTExMjUtNTBmMS00ZTA3LWEwNjktZjQxM2UwNjA3ZGEw");
-        // formData.append("secret_key","YTE4YmM5YmYtZjZhYS00MTU5LWI4Y2EtYjQyYTRkNzAxOWZj")
+        var formData = new FormData();
+        formData.append("api_key", "Mzc0MTExMjUtNTBmMS00ZTA3LWEwNjktZjQxM2UwNjA3ZGEw");
+        formData.append("secret_key","YTE4YmM5YmYtZjZhYS00MTU5LWI4Y2EtYjQyYTRkNzAxOWZj")
 
         // var https = require('https');        
         // const agent = new https.Agent({rejectUnauthorized: false})
         // const Http = new XMLHttpRequest();
         
-        // axios({
-        //     method: 'post',
-        //     url: 'https://109.238.12.179:5000/v1/api/client/authentificate',
-        //     data: formData,  
-        //     headers: {'Content-Type': `multipart/form-data; boundary=${formData._boundary}`},
-        //     // httpsAgent: agent          
-        //     })
-        //     .then(function (response) {
-        //       alert("response" + JSON.stringify(response ))
-        //       console.log("Correct POST api call", JSON.stringify(response ));
-        //     })
-        //     .catch(function (response) {
-        //       console.log("api call failed");
-        //   });
+        axios({
+            method: 'post',
+            url: 'https://109.238.12.179:5000/v1/api/client/authentificate',
+            data: formData,  
+            headers: {'Content-Type': `multipart/form-data; boundary=${formData._boundary}`},
+            // httpsAgent: agent          
+            })
+            .then(function (response) {
+              alert("response" + JSON.stringify(response ))
+              console.log("Correct POST api call", JSON.stringify(response ));
+            })
+            .catch(function (response) {
+              console.log("api call failed");
+          });
 
         run()         
       })

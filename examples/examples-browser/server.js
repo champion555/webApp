@@ -1,3 +1,6 @@
+
+var FormData = require('form-data');
+var axios = require('axios')
 const express = require('express')
 const path = require('path')
 const { get } = require('request')
@@ -27,6 +30,13 @@ app.get('/webcam_face_detection', (req, res) => res.sendFile(path.join(viewsDir,
 // app.get('/video_face_tracking', (req, res) => res.sendFile(path.join(viewsDir, 'videoFaceTracking.html')))
 
 
+app.get('/testapiface', async (req, res) => {
+  res.json({status:200, message:'ok'})
+})
+app.post('/testapiface', async (req, res) => {
+  var getRes= req.body.key
+  res.json({status:200, message:getRes +'ok'})
+})
 
 app.post('/fetch_external_image', async (req, res) => {
   const { imageUrl } = req.body
@@ -41,6 +51,94 @@ app.post('/fetch_external_image', async (req, res) => {
     return res.status(404).send(err.toString())
   }
 })
+
+
+// app.post('/api_call', async (req, res) => {
+//   var { data } = req.body
+//   data.result = "success"  
+//   res.send(data)
+// })
+app.post('/api_call', async (req, res) => {
+
+  var formData = new FormData();
+  formData.append("api_key", "Mzc0MTExMjUtNTBmMS00ZTA3LWEwNjktZjQxM2UwNjA3ZGEw");
+  formData.append("secret_key","YTE4YmM5YmYtZjZhYS00MTU5LWI4Y2EtYjQyYTRkNzAxOWZj")
+  console.log("api called for token : ", formData._boundary)
+
+
+  let key_res;
+  await  axios({
+      method: 'post',
+      url: 'http://109.238.12.179:5000/v1/api/client/authentificate',
+      data: formData,
+      headers: {'Content-Type': `multipart/form-data; boundary=${formData._boundary}` }
+      })
+      .then(function (response) {
+        // console.log(response)
+      
+        key_res = response
+      })
+      .catch(function (response) {
+      //  console.log("error occured : ", response)
+    })
+
+    if(key_res.status == 'SUCCESS'){
+
+      await  axios({
+        method: 'post',
+        url: 'http://109.238.12.179:5000/v1/api/photoFaceLiveness',
+        data: formData,
+        headers: {'Content-Type': `multipart/form-data; boundary=${formData._boundary}` }
+        })
+        .then(function (response) {
+          // console.log(response)
+        
+          key_res = response
+        })
+        .catch(function (response) {
+        //  console.log("error occured : ", response)
+      })
+
+
+    }else{
+      res.send("Failed")
+      return
+    }
+
+    console.log("token got : ", key_res)
+    res.send("Ok")
+    // console.log("api called")
+
+})
+function authenticationToServer(){       
+  var formData = new FormData();
+  formData.append("api_key", "MWEwMjVjYzYtMTcyNy00Y2M5LWJhZTQtNDY4NzY2YzY0NjRis");
+  formData.append("secret_key","NjFhNzAzY2UtZTE3MS00OTRmLWIxZDMtOWFjZTcxYzUzY2Vl")
+  // formData.append("image", imagefile.files[0]);
+
+  var tokenData = {
+    "api_key": "MWEwMjVjYzYtMTcyNy00Y2M5LWJhZTQtNDY4NzY2YzY0NjRis",
+    "secret_key": "NjFhNzAzY2UtZTE3MS00OTRmLWIxZDMtOWFjZTcxYzUzY2Vl"
+  }
+
+
+  axios({
+      method: 'post',
+      url: 'http://109.238.12.179:5000/v1/api/client/authentificate',
+      data: tokenData
+  })
+      .then(function (response) {
+        loadingDialog.style.display = "none"
+        document.getElementById("authenticationRes").innerText = response
+        // console.log(response);
+      })
+      .catch(function (response) {
+        loadingDialog.style.display = "none"
+        document.getElementById("authenticationRes").innerText = "error"
+        //handle error
+        console.log("eror happenend : ", response);
+    });
+}
 
 app.listen(3000, () => console.log('Listening on port 3000!'))
 
