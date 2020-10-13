@@ -75,6 +75,7 @@
             method: 'post',
             url: 'https://109.238.12.179:5000/v1/api/client/authentificate',
             data: formData,  
+
             headers: {'Content-Type': `multipart/form-data; boundary=${formData._boundary}` }          
             })
             .then(function (response) {
@@ -90,9 +91,11 @@
               console.log(response);
           });
       }
-      function uploadPhtoToServer(token){       
+      function uploadPhtoToServer(token){    
+
         var formData = new FormData();        
         formData.append("live_image_file", imgURL);
+
         axios({
             method: 'post',
             url: 'https://109.238.12.179:5000/v1/api/photoFaceLiveness',
@@ -110,6 +113,7 @@
               //handle error
               console.log(response);
           });
+
       }
       async function onPlay() {
         const videoEl = $('#inputVideo').get(0)
@@ -181,8 +185,11 @@
         axios({
             method: 'post',
             url: 'https://109.238.12.179:5000/v1/api/client/authentificate',
-            data: formData,  
-            headers: {'Content-Type': `multipart/form-data`},
+            data: formData, 
+            httpsAgent:  new https.Agent({
+              rejectUnauthorized: false
+            }), 
+            headers: {'Content-Type': `multipart/form-data; boundary=${formData._boundary}`},
             // httpsAgent: agent          
             })
             .then(function (response) {
