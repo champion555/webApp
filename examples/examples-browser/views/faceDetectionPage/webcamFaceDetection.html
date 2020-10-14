@@ -2,7 +2,6 @@
 <html>
   <head>
     <script src="face-api.js"></script>
-    <!-- <script src="js/commons.js"></script> -->
     <script src="js/faceDetectionControls.js"></script>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="./faceDetectionPage.css">
@@ -15,7 +14,6 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>    
   </head>
@@ -33,9 +31,7 @@
         </div>
         <div style="position: absolute;top:130px;left: 0px;z-index: 2;">
           <img src="assets/ic_undetected.png" id="imgOval" style="width: 100%;"/>
-          <!-- <input type="button" value="Capture" onclick="onCapture()"
-            style="width: 100%;height: 150px;" />
-          <img id="img_test" src="sdf" width="100%" /> -->
+          <img id="img_test" src="sdf" width="100%" />
       </div>
       <div style="position: fixed;z-index: 3;width: 100%; bottom: 0;margin-bottom: 150px; align-items: center;">
         <p id="txtMessage"> </p>
@@ -53,7 +49,6 @@
       let screenHeight = window.innerHeight
       var imgURL
       var faceDetectFlag = true
-      // var FormData = require('form-data');
       const loadingDialog = document.getElementById( 'loadingView' );
       function onCapture() {
         var canvas = document.getElementById("overlay");
@@ -62,9 +57,9 @@
         console.log("clicked:", canvas.toDataURL())
         imgURL = canvas.toDataURL()
         console.log("img url : ", imgURL)
-        authenticationToServer()
-        // var img = document.getElementById('img_test');
-        // img.src = canvas.toDataURL();
+        // authenticationToServer()
+        var img = document.getElementById('img_test');
+        img.src = canvas.toDataURL();
       }      
       function authenticationToServer(){       
         var formData = new FormData();
@@ -78,20 +73,18 @@
 
             headers: {'Content-Type': `multipart/form-data; boundary=${formData._boundary}` }          
             })
-            .then(function (response) {
-              // loadingDialog.style.display = "none"     
+            .then(function (response) {                
                 uploadPhtoToServer(response.api_access_token)         
                 let JsonResponse = JSON.parse(JSON.stringify(response ))
                 document.getElementById("authenticationRes").innerText = JsonResponse
             })
             .catch(function (response) {
               loadingDialog.style.display = "none"
-              document.getElementById("authenticationRes").innerText = "authentication failed"
-              //handle error
+              document.getElementById("authenticationRes").innerText = "authentication failed"            
               console.log(response);
           });
       }
-      function uploadPhtoToServer(token){    
+      function uploadPhtoToServer(token){ 
 
         var formData = new FormData();        
         formData.append("live_image_file", imgURL);
@@ -113,7 +106,6 @@
               //handle error
               console.log(response);
           });
-
       }
       async function onPlay() {
         const videoEl = $('#inputVideo').get(0)
@@ -129,8 +121,6 @@
             let space_top = result._box._y - oval_top
             let space_down = oval_down - (result._box._y + result._box.width)
             console.log(result._box._y)
-            // document.getElementById("txtTopSpace").innerText = space_top
-            // document.getElementById("txtDownSpace").innerText = space_down
             if (screenHeight * 0.04 < space_top && space_top < screenHeight * 0.085 && screenHeight * 0.32 < space_down &&  space_down< screenHeight * 0.4){
               document.getElementById("imgOval").src = "assets/ic_detected.png"
               document.getElementById("txtMessage").innerText = "Please keep your head in the frame to start selfie capture"
@@ -148,7 +138,6 @@
             document.getElementById("imgOval").src = "assets/ic_undetected.png"
             document.getElementById("txtMessage").innerText = "Please place your face on the oval and get closer to the device"
             document.getElementById("authenticationRes").innerText = "No face"
-            // console.log("result no")
           }
         }else{
           console.log("face api call was occured")
@@ -171,37 +160,11 @@
         var x = document.getElementById("imgOval")
         x.height = img_height;
         // alert("sizeHeight:" + screenHeight +"sizeWidth"+ screenWidth)
-        initFaceDetectionControls()
-        // authenticationToServer()
-
-        var formData = new FormData();
-        formData.append("api_key", "Mzc0MTExMjUtNTBmMS00ZTA3LWEwNjktZjQxM2UwNjA3ZGEw");
-        formData.append("secret_key","YTE4YmM5YmYtZjZhYS00MTU5LWI4Y2EtYjQyYTRkNzAxOWZj")
-
-        // var https = require('https');        
-        // const agent = new https.Agent({rejectUnauthorized: false})
-        // const Http = new XMLHttpRequest();
-        
-        axios({
-            method: 'post',
-            url: 'https://109.238.12.179:5000/v1/api/client/authentificate',
-            data: formData, 
-            httpsAgent:  new https.Agent({
-              rejectUnauthorized: false
-            }), 
-            headers: {'Content-Type': `multipart/form-data; boundary=${formData._boundary}`},
-            // httpsAgent: agent          
-            })
-            .then(function (response) {
-              alert("response" + JSON.stringify(response ))
-              console.log("Correct POST api call", JSON.stringify(response ));
-            })
-            .catch(function (response) {
-              console.log("api call failed");
-          });
-
+        initFaceDetectionControls()       
         run()         
       })
     </script>
+
+
   </body>
 </html>
