@@ -1,0 +1,18 @@
+.Button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    width: 80%;
+    background: darkslateblue;
+    color: wheat;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-radius: 10px;
+}
+.imgIcon{
+    display: flex;
+    margin-left: 10px;
+    width: 40px;
+    height: 40px;
+}
